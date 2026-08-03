@@ -12,11 +12,11 @@ type Tree struct {
 	Right *Tree
 }
 
-func create(n int) *Tree {
+func create(value int) *Tree {
 	var tree *Tree
 	rand.New(rand.NewSource(time.Now().Unix()))
-	for i := 0; i < 2*n; i++ {
-		temp := rand.Intn(n * 2)
+	for i := 0; i < 2*value; i++ {
+		temp := rand.Intn(value * 2)
 		tree = insert(tree, temp)
 	}
 	return tree
@@ -31,19 +31,19 @@ func traverse(tree *Tree) {
 	traverse(tree.Right)
 }
 
-func insert(t *Tree, v int) *Tree {
-	if t == nil {
-		return &Tree{nil, v, nil}
+func insert(tree *Tree, value int) *Tree {
+	if tree == nil {
+		return &Tree{nil, value, nil}
 	}
-	if v == t.Value {
-		return t
+	if value == tree.Value {
+		return tree
 	}
-	if v < t.Value {
-		t.Left = insert(t.Left, v)
-		return t
+	if value < tree.Value {
+		tree.Left = insert(tree.Left, value)
+		return tree
 	}
-	t.Right = insert(t.Right, v)
-	return t
+	tree.Right = insert(tree.Right, value)
+	return tree
 }
 
 func main() {
