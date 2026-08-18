@@ -5,8 +5,8 @@ import (
 	"math/rand"
 )
 
-var CLOSEA bool
 var DATA = make(map[int]bool)
+var signal chan struct{}
 
 func random(min, max int) int {
 	return min + rand.Intn(max-min)
@@ -14,11 +14,13 @@ func random(min, max int) int {
 
 func writer(out chan<- int) {
 	for {
-		if CLOSEA {
+		select {
+		case <-signal:
 			close(out)
 			return
+
+		case out <- random(1, 10):
 		}
-		out <- random(1, 10)
 	}
 }
 
@@ -27,7 +29,7 @@ func reader(in <-chan int, out chan<- int) {
 		fmt.Print(i, " ")
 		_, ok := DATA[i]
 		if ok {
-			CLOSEA = true
+			signal <- struct{}{}
 		} else {
 			DATA[i] = true
 			out <- i
@@ -49,7 +51,11 @@ func third(in <-chan int) {
 func main() {
 	A := make(chan int)
 	B := make(chan int)
+
+	signal = make(chan struct{})
+
 	go writer(A)
 	go reader(A, B)
+
 	third(B)
 }
