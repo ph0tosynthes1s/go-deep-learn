@@ -25,7 +25,7 @@ func main() {
 	randomDuration := time.Duration(randomCount) * time.Second
 	var ctx, cancel = context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
-d
+
 	go routine(ctx, randomDuration)
 	<-blocker
 }
